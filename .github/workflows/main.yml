@@ -1,0 +1,97 @@
+name: IPA Builder
+
+on:
+  workflow_dispatch:
+    inputs:
+      ipa_url:
+        description: "URL to the decrypted IPA file"
+        required: true
+        type: string
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: macos-latest
+    permissions:
+      contents: write
+    
+    env:
+      THEOS: ${{ github.workspace }}/theos
+
+    steps:
+
+      - name: Checkout Main
+        uses: actions/checkout@v6.0.2
+
+      - name: Download and validate IPA
+        id: ipa
+        run: |
+          wget "${{ inputs.ipa_url }}" --no-verbose -O decrypted.ipa
+
+          file_type=$(file --mime-type -b decrypted.ipa)
+
+          if [[ "$file_type" != "application/x-ios-app" && "$file_type" != "application/zip" ]]; then
+            echo "::error::Validation failed: The downloaded file is not a valid IPA. Detected type: $file_type."
+            exit 1
+          fi
+
+          VERSION=$(unzip -p decrypted.ipa "Payload/*.app/Info.plist" | plutil -extract CFBundleShortVersionString raw -o - -)
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+
+      - name: Install Dependencies
+        run: brew install make ldid cyan
+
+      - name: Cache Theos
+        id: theos
+        uses: actions/cache@v5.0.5
+        with:
+          path: theos
+          key: theos_cache
+          restore-keys: theos_cache
+
+      - name: Setup Theos
+        if: ${{ steps.theos.outputs.cache-hit != 'true' }}
+        run: |
+          if [ ! -d "$THEOS" ]; then
+            git clone --recursive https://github.com/theos/theos.git "$THEOS"
+          fi
+
+      - name: Download iOS SDK
+        if: ${{ steps.theos.outputs.cache-hit != 'true' }}
+        run: |
+          git clone --quiet -n --depth=1 --filter=tree:0 https://github.com/theos/sdks/
+          cd sdks
+          git sparse-checkout set --no-cone iPhoneOS16.5.sdk
+          git checkout
+          mv *.sdk $THEOS/sdks
+
+      - name: Clone YouTubeHeader
+        run: |
+          if [ -d "$THEOS/include/YouTubeHeader" ]; then
+            cd $THEOS/include/YouTubeHeader && git pull
+          else
+            cd $THEOS/include && git clone --quiet --depth=1 https://github.com/PoomSmart/YouTubeHeader.git
+          fi
+
+      - name: Clone Open in YouTube (Safari extension)
+        run: |
+          git clone --quiet https://github.com/BillyCurtis/OpenYouTubeSafariExtension.git
+
+      - name: Build YouTube Z
+        run: |
+          echo "$THEOS/bin" >> $GITHUB_PATH
+          curl -L https://raw.githubusercontent.com/PoomSmart/YouTube-X/main/Tweak.x -o ytx.x
+          gmake clean package
+          mv packages/*.deb youtube-z.deb
+
+      - name: Inject tweaks into IPA
+        run: cyan -i decrypted.ipa -o YouTube\ ${{ steps.ipa.outputs.version }}.ipa -f youtube-z.deb OpenYouTubeSafariExtension/OpenYouTubeSafariExtension.appex
+
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v7
+        with:
+          path: YouTube\ ${{ steps.ipa.outputs.version }}.ipa
+          archive: false
