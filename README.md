@@ -7,7 +7,7 @@
 | ![6](https://repo.ikghd.me/depictions/me.ikghd.ytkplus/screenshots/6.PNG) | ![8](https://repo.ikghd.me/depictions/me.ikghd.ytkplus/screenshots/8.PNG) | ![12](https://repo.ikghd.me/depictions/me.ikghd.ytkplus/screenshots/12.PNG) |
 
 ## Recommended iOS iPadOS Firmware & YouTube App Versions?
-* iOS iPadOS 16.0 / iOS iPadOS 26.x ...
+* iOS iPadOS 16.0 / iOS iPadOS 27.x
 * YouTube v20.20x and newer !
 * For older version [visit telegram](https://t.me/ikgipa) .
 
@@ -30,9 +30,8 @@ Add `https://repo.ikghd.me` to your Cydia / Zebra / Sileo sources and download f
 
 | Application | Bundle | Version | YTKillerPlus | File Type |
 |---|---|---|---|---|
-| [YouTube ↓](https://ikghd.site/ipa/YouTube_21.22_YTKillerPlus_5.5.4.ipa) | com.google.ios.youtube | 21.22 | 5.5.4 | IPA |
-| [TrollStore ↓](https://ikghd.site/ipa/YouTube_21.22_YTKillerPlus_5.5.4_TrollStore.tipa) | com.google.ios.youtube | 21.22 | 5.5.4 | tipa |
-| [No_Plugin ↓](https://ikghd.site/ipa/YouTube_21.22_YTKillerPlus_5.5.4_NP.ipa) | com.google.ios.youtube | 21.22 | 5.5.4 | IPA |
+| [YouTube ↓](https://ikghd.site/ipa/YouTube_21.26_YTKillerPlus_5.8.4.ipa) | com.google.ios.youtube | 21.26 | 5.8.4 | IPA |
+| [TrollStore ↓](https://ikghd.site/ipa/YouTube_21.26_YTKillerPlus_5.8.4_TrollStore.tipa) | com.google.ios.youtube | 21.26 | 5.8.4 | tipa |
 
 </details>
 
@@ -66,7 +65,7 @@ Add `https://repo.ikghd.me` to your Cydia / Zebra / Sileo sources and download f
 
 ### TrollStore TIPA
 * Download and install TrollStore from [here](https://github.com/opa334/TrollStore).
-* Copy this link [here](https://ikghd.site/ipa/YouTube_21.22_YTKillerPlus_5.5.4_TrollStore.tipa) and paste it into the "Install from URL" option in TrollStore.
+* Copy this link [here](https://ikghd.site/ipa/YouTube_21.26_YTKillerPlus_5.8.4_TrollStore.tipa) and paste it into the "Install from URL" option in TrollStore.
 
 
 ### Telegram Channel
